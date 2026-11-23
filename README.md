@@ -1,3 +1,46 @@
+# Langkah Pakai
+
+Clone repo ini
+```
+git clone https://github.com/terainfinits/rsbp-fp
+```
+
+Buat virtual environment dan install
+```
+python -m venv .venv
+```
+```
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+Cek
+```
+Test-Path .\.venv\Scripts\codekg.exe
+```
+
+Buat variabel
+```
+$kg = ".\.venv\Scripts\codekg.exe"
+```
+Build
+```
+& $kg build game-2048
+```
+Cek graf
+```
+start game-2048/codekg-out/graph.html
+```
+<img width="1738" height="728" alt="image" src="https://github.com/user-attachments/assets/694896a4-d77b-446a-8746-26ce6c9b155a" />
+
+Misalnya cek merge dimana
+```
+& $kg find merge --root game-2048
+```
+Cari yang terhubung dengan merge
+```
+& $kg callers "urn:codekg:symbol:logic.py:merge" --root game-2048
+```
+
 # CodeKG
 
 CodeKG membuat peta kode Python yang dapat dikueri agen dari terminal. Satu build menghasilkan graf RDF dalam Turtle dan penjelajah HTML offline di `codekg-out/` milik proyek yang diindeks. Pertanyaan demo adalah **“Jika `verify_token` berubah, siapa pemanggil langsungnya dan di baris mana saya harus memeriksa kode?”**
