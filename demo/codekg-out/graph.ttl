@@ -1,0 +1,206 @@
+@prefix kg: <urn:codekg:vocab:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kg:CallSite a rdfs:Class .
+
+kg:Class a rdfs:Class .
+
+kg:Constant a rdfs:Class .
+
+kg:File a rdfs:Class .
+
+kg:Folder a rdfs:Class .
+
+kg:Function a rdfs:Class .
+
+kg:Method a rdfs:Class ;
+    rdfs:subClassOf kg:Function .
+
+<urn:codekg:folder:.> a kg:Folder ;
+    kg:contains <urn:codekg:file:AGENTS.md>,
+        <urn:codekg:file:settings.json>,
+        <urn:codekg:folder:app>,
+        <urn:codekg:folder:auth> ;
+    kg:name "demo" ;
+    kg:path "." ;
+    kg:qualified "." .
+
+<urn:codekg:site:app/service.py:10.7-10.19> a kg:CallSite ;
+    kg:caller <urn:codekg:symbol:app/service.py:login> ;
+    kg:column 7 ;
+    kg:expression "check" ;
+    kg:line 10 ;
+    kg:path "app/service.py" ;
+    kg:status "resolved" ;
+    kg:target <urn:codekg:symbol:auth/tokens.py:verify_token> .
+
+<urn:codekg:site:app/service.py:12.11-12.24> a kg:CallSite ;
+    kg:caller <urn:codekg:symbol:app/service.py:login> ;
+    kg:column 11 ;
+    kg:expression "check" ;
+    kg:line 12 ;
+    kg:path "app/service.py" ;
+    kg:status "resolved" ;
+    kg:target <urn:codekg:symbol:auth/tokens.py:verify_token> .
+
+<urn:codekg:site:app/service.py:16.11-16.34> a kg:CallSite ;
+    kg:caller <urn:codekg:symbol:app/service.py:dispatch> ;
+    kg:column 11 ;
+    kg:expression "handlers[action]" ;
+    kg:line 16 ;
+    kg:path "app/service.py" ;
+    kg:status "unresolved" .
+
+<urn:codekg:site:app/service.py:6.15-6.27> a kg:CallSite ;
+    kg:caller <urn:codekg:symbol:app/service.py:SessionStore.save> ;
+    kg:column 15 ;
+    kg:expression "check" ;
+    kg:line 6 ;
+    kg:path "app/service.py" ;
+    kg:status "resolved" ;
+    kg:target <urn:codekg:symbol:auth/tokens.py:verify_token> .
+
+kg:caller a rdf:Property .
+
+kg:calls a rdf:Property .
+
+kg:column a rdf:Property .
+
+kg:contains a rdf:Property .
+
+kg:declares a rdf:Property .
+
+kg:endLine a rdf:Property .
+
+kg:expression a rdf:Property .
+
+kg:imports a rdf:Property .
+
+kg:inheritsFrom a rdf:Property .
+
+kg:line a rdf:Property .
+
+kg:name a rdf:Property .
+
+kg:path a rdf:Property .
+
+kg:qualified a rdf:Property .
+
+kg:status a rdf:Property .
+
+kg:target a rdf:Property .
+
+<urn:codekg:file:AGENTS.md> a kg:File ;
+    kg:name "AGENTS.md" ;
+    kg:path "AGENTS.md" ;
+    kg:qualified "AGENTS.md" .
+
+<urn:codekg:file:app/__init__.py> a kg:File ;
+    kg:name "__init__.py" ;
+    kg:path "app/__init__.py" ;
+    kg:qualified "app/__init__.py" .
+
+<urn:codekg:file:app/service.py> a kg:File ;
+    kg:declares <urn:codekg:symbol:app/service.py:SessionStore>,
+        <urn:codekg:symbol:app/service.py:dispatch>,
+        <urn:codekg:symbol:app/service.py:login> ;
+    kg:imports <urn:codekg:file:auth/tokens.py> ;
+    kg:name "service.py" ;
+    kg:path "app/service.py" ;
+    kg:qualified "app/service.py" .
+
+<urn:codekg:file:auth/__init__.py> a kg:File ;
+    kg:name "__init__.py" ;
+    kg:path "auth/__init__.py" ;
+    kg:qualified "auth/__init__.py" .
+
+<urn:codekg:file:settings.json> a kg:File ;
+    kg:name "settings.json" ;
+    kg:path "settings.json" ;
+    kg:qualified "settings.json" .
+
+<urn:codekg:folder:app> a kg:Folder ;
+    kg:contains <urn:codekg:file:app/__init__.py>,
+        <urn:codekg:file:app/service.py> ;
+    kg:name "app" ;
+    kg:path "app" ;
+    kg:qualified "app" .
+
+<urn:codekg:folder:auth> a kg:Folder ;
+    kg:contains <urn:codekg:file:auth/__init__.py>,
+        <urn:codekg:file:auth/tokens.py> ;
+    kg:name "auth" ;
+    kg:path "auth" ;
+    kg:qualified "auth" .
+
+<urn:codekg:symbol:app/service.py:SessionStore> a kg:Class ;
+    kg:declares <urn:codekg:symbol:app/service.py:SessionStore.save> ;
+    kg:endLine 6 ;
+    kg:inheritsFrom <urn:codekg:symbol:auth/tokens.py:TokenStore> ;
+    kg:line 4 ;
+    kg:name "SessionStore" ;
+    kg:path "app/service.py" ;
+    kg:qualified "app.service.SessionStore" .
+
+<urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO> a kg:Constant ;
+    kg:endLine 1 ;
+    kg:line 1 ;
+    kg:name "TOKEN_DEMO" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth.tokens.TOKEN_DEMO" .
+
+<urn:codekg:symbol:auth/tokens.py:TokenStore.save> a kg:Method ;
+    kg:endLine 10 ;
+    kg:line 9 ;
+    kg:name "save" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth.tokens.TokenStore.save" .
+
+<urn:codekg:file:auth/tokens.py> a kg:File ;
+    kg:declares <urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO>,
+        <urn:codekg:symbol:auth/tokens.py:TokenStore>,
+        <urn:codekg:symbol:auth/tokens.py:verify_token> ;
+    kg:name "tokens.py" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth/tokens.py" .
+
+<urn:codekg:symbol:app/service.py:SessionStore.save> a kg:Method ;
+    kg:calls <urn:codekg:symbol:auth/tokens.py:verify_token> ;
+    kg:endLine 6 ;
+    kg:line 5 ;
+    kg:name "save" ;
+    kg:path "app/service.py" ;
+    kg:qualified "app.service.SessionStore.save" .
+
+<urn:codekg:symbol:app/service.py:dispatch> a kg:Function ;
+    kg:endLine 16 ;
+    kg:line 15 ;
+    kg:name "dispatch" ;
+    kg:path "app/service.py" ;
+    kg:qualified "app.service.dispatch" .
+
+<urn:codekg:symbol:auth/tokens.py:TokenStore> a kg:Class ;
+    kg:declares <urn:codekg:symbol:auth/tokens.py:TokenStore.save> ;
+    kg:endLine 10 ;
+    kg:line 8 ;
+    kg:name "TokenStore" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth.tokens.TokenStore" .
+
+<urn:codekg:symbol:app/service.py:login> a kg:Function ;
+    kg:calls <urn:codekg:symbol:auth/tokens.py:verify_token> ;
+    kg:endLine 12 ;
+    kg:line 9 ;
+    kg:name "login" ;
+    kg:path "app/service.py" ;
+    kg:qualified "app.service.login" .
+
+<urn:codekg:symbol:auth/tokens.py:verify_token> a kg:Function ;
+    kg:endLine 5 ;
+    kg:line 4 ;
+    kg:name "verify_token" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth.tokens.verify_token" .
+

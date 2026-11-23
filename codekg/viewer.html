@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>CodeKG · Graf workspace</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5ef;color:#172823;font:15px "Segoe UI",sans-serif}header{padding:22px 4vw;background:#15382f;color:white;display:flex;align-items:baseline;gap:18px}h1{font-size:24px;margin:0}main{padding:24px 4vw}nav,.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}label{display:grid;gap:4px;font-size:13px}input,select,button{padding:8px 10px;border:1px solid #84978d;border-radius:5px;background:white;color:inherit;font:inherit}button{cursor:pointer}button:hover,button:focus{background:#d9f1db}.layout{margin-top:18px;display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:18px}#canvas,aside{border:1px solid #bdc8bd;background:#fff;border-radius:7px;padding:12px}#canvas{overflow:auto;max-height:70vh;background-color:#fdfdf8}aside{overflow-wrap:anywhere}h2{font-size:18px}#results button,#relations button{display:block;text-align:left;margin:5px 0;max-width:100%}#results{max-height:180px;overflow:auto}svg text{font:13px "Segoe UI",sans-serif;pointer-events:none}.node,.edge{cursor:pointer}.edge:hover path{stroke:#b45417;stroke-width:4}.node:focus rect,.node:hover rect{stroke-width:3}#status{color:#506058}@media(max-width:740px){.layout{grid-template-columns:1fr}}
+</style>
+<header><h1>CodeKG</h1><span>Graf workspace</span></header>
+<main><nav><label>Cari simbol atau path<input id="search" type="search" placeholder="verify_token"></label>
+<label>Tipe simpul<select id="kind"><option value="">Semua tipe</option></select></label>
+<label>Tampilan<select id="mode"><option>3D</option><option>2D</option></select></label><button id="home">Struktur workspace</button></nav><p id="hint">Seret ruang kosong untuk memutar graf. Gunakan roda mouse untuk zoom.</p><div id="results"></div>
+<div class="layout"><section id="canvas" aria-label="Graf berarah"></section><aside><h2 id="heading">Struktur workspace</h2><p id="detail">Pilih simpul untuk melihat tetangga dan relasinya.</p><div id="relations"></div><p id="status"></p></aside></div></main>
+<script id="graph-data" type="application/json">__DATA__</script><script>
+const $ = id => document.getElementById(id);
+const data = JSON.parse($('graph-data').textContent);
+const byId = new Map(data.nodes.map(n => [n.id,n]));
+let focus = null;
+function button(parent,label,action){
+  const el=document.createElement('button');el.textContent=label;el.onclick=action;parent.append(el);
+}
+function svg(tag,attrs,parent){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const [key,value] of Object.entries(attrs))el.setAttribute(key,value);
+  parent.append(el);return el;
+}
+function evidence(edge){
+  const a=byId.get(edge.source), b=byId.get(edge.target);
+  $('heading').textContent=edge.rel;
+  $('detail').textContent=a.label+' → '+b.label;
+  $('status').textContent=edge.evidence.length ? 'Lokasi panggilan: '+edge.evidence.map(s=>s.path+':'+s.line+' (kolom '+(s.column+1)+')').join(', ') : 'Lokasi entitas: '+a.path+(a.line?':'+a.line:'')+' → '+b.path+(b.line?':'+b.line:'');
+}
+function choose(id){focus=id;$('search').value='';$('kind').value='';draw();}
+function drawFlat(visible,edges,links){
+  const columns=new Map(), positions=new Map();
+  for(const n of visible){
+    let level=0;
+    if(focus)level=n.id===focus?1:links.some(e=>e.source===n.id)?0:2;
+    else level=n.path==='.'?0:n.path.split('/').length+(n.line?1:0);
+    const row=columns.get(level)||0;columns.set(level,row+1);
+    positions.set(n.id,[20+level*285,30+row*75]);
+  }
+  $('canvas').replaceChildren();
+  const chart=svg('svg',{width:Math.max(300,...Array.from(columns.keys(),k=>k*285+240)),
+      height:Math.max(220,...Array.from(columns.values(),r=>r*75+40)),role:'group','aria-label':'Simpul dan relasi'},$('canvas'));
+  const marker=svg('marker',{id:'arrow',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},svg('defs',{},chart));
+  svg('path',{d:'M0 0 L10 5 L0 10z',fill:'#57836d'},marker);
+  for(const edge of edges){
+    const [x,y]=positions.get(edge.source),[tx,ty]=positions.get(edge.target);
+    const forward=tx>x, a=x+(forward?185:0),b=tx+(forward?0:185);
+    const g=svg('g',{class:'edge'},chart);
+    const mid=(a+b)/2;
+    const path=edge.source===edge.target?'M '+(x+155)+' '+y+' q 15 -30 30 0':'M '+a+' '+(y+20)+' C '+mid+' '+(y+20)+' '+mid+' '+(ty+20)+' '+b+' '+(ty+20);
+    svg('path',{d:path,fill:'none',stroke:'#739080','marker-end':'url(#arrow)'},g);
+    svg('title',{},g).textContent=edge.rel;g.onclick=()=>evidence(edge);
+  }
+  for(const n of visible){
+    const [x,y]=positions.get(n.id);
+    const g=svg('g',{class:'node',tabindex:0,role:'button','aria-label':n.label},chart);
+    svg('rect',{x,y,width:185,height:42,rx:5,fill:n.id===focus?'#c9e9cc':n.kind==='Folder'?'#ede8ce':'#edf3ef',stroke:'#708879'},g);
+    svg('text',{x:x+8,y:y+16},g).textContent=n.name.length>23?n.name.slice(0,22)+'…':n.name;
+    svg('text',{x:x+8,y:y+33,fill:'#537160'},g).textContent=n.kind;
+    svg('title',{},g).textContent=n.label;g.onclick=()=>choose(n.id);
+    g.onkeydown=e=>{if(e.key==='Enter')choose(n.id);};
+  }
+}
+let yaw=0, pitch=0, zoom=1;
+function drawSpace(nodes,edges){
+  const host=$('canvas');
+  host.replaceChildren();
+  const scene=svg('svg',{viewBox:'-480 -300 960 600',width:'100%',role:'group','aria-label':'Graf 3D'},host);
+  scene.style.touchAction='none';
+  scene.style.cursor='grab';
+  const marker=svg('marker',{id:'arrow',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},svg('defs',{},scene));
+  svg('path',{d:'M0 0 L10 5 L0 10z',fill:'#57836d'},marker);
+  const world=new Map();
+  const outer=nodes.filter(n=>n.id!==focus);
+  outer.forEach((n,i)=>{
+    const y=1-2*(i+0.5)/outer.length;
+    const radius=Math.sqrt(1-y*y), angle=i*Math.PI*(3-Math.sqrt(5));
+    world.set(n.id,[310*radius*Math.cos(angle),225*y,240*radius*Math.sin(angle)]);
+  });
+  if(focus)world.set(focus,[0,0,0]);
+  const lines=edges.map(edge=>{
+    const line=svg('path',{class:'edge',fill:'none',stroke:'#709484','stroke-width':2,'marker-end':'url(#arrow)'},scene);
+    line.onclick=()=>evidence(edge);
+    return {edge,line};
+  });
+  const labels=nodes.map(n=>{
+    const g=svg('g',{class:'node',tabindex:0,role:'button','aria-label':n.label},scene);
+    const w=Math.min(190,Math.max(66,n.name.length*8+16));
+    svg('rect',{x:-w/2,y:-14,width:w,height:28,rx:8,fill:n.id===focus?'#bedfc0':'#edf3ef',stroke:'#678675'},g);
+    svg('text',{'text-anchor':'middle',y:4},g).textContent=n.name.length>21?n.name.slice(0,20)+'…':n.name;
+    svg('title',{},g).textContent=n.label;
+    g.onclick=()=>choose(n.id);
+    g.onkeydown=e=>{if(e.key==='Enter')choose(n.id);};
+    return {id:n.id,g,w};
+  });
+  function paint(){
+    const points=new Map();
+    for(const {id,w} of labels){
+      const [x,y,z]=world.get(id);
+      const u=x*Math.cos(yaw)+z*Math.sin(yaw), v=z*Math.cos(yaw)-x*Math.sin(yaw);
+      const depth=v*Math.cos(pitch)+y*Math.sin(pitch);
+      const scale=zoom*800/(800-depth);
+      points.set(id,{x:u*scale,y:(y*Math.cos(pitch)-v*Math.sin(pitch))*scale,depth,scale,w});
+    }
+    for(const {edge,line} of lines){
+      const a=points.get(edge.source), b=points.get(edge.target);
+      const dx=b.x-a.x,dy=b.y-a.y;
+      const stop=Math.min(0.85, b.scale/Math.max(Math.abs(dx)/(b.w/2),Math.abs(dy)/14,0.001));
+      line.setAttribute('d',a===b?'M '+a.x+' '+a.y+' q 65 -55 0 -14':'M '+a.x+' '+a.y+' L '+(b.x-dx*stop)+' '+(b.y-dy*stop));
+    }
+    labels.sort((a,b)=>points.get(a.id).depth-points.get(b.id).depth);
+    for(const {id,g} of labels){
+      const p=points.get(id);
+      g.setAttribute('transform','translate('+p.x+' '+p.y+') scale('+p.scale+')');
+      scene.append(g);
+    }
+  }
+  let drag=null;
+  scene.onpointerdown=e=>{
+    if(e.target.closest('.node,.edge'))return;
+    drag=[e.clientX,e.clientY];scene.setPointerCapture(e.pointerId);
+  };
+  scene.onpointermove=e=>{
+    if(!drag)return;
+    yaw+=(e.clientX-drag[0])*0.008;pitch+=(e.clientY-drag[1])*0.008;
+    drag=[e.clientX,e.clientY];paint();
+  };
+  scene.onpointerup=scene.onpointercancel=()=>{drag=null;};
+  scene.addEventListener('wheel',e=>{
+    e.preventDefault();zoom=Math.min(3,Math.max(0.45,zoom*Math.exp(-e.deltaY*0.001)));paint();
+  },{passive:false});
+  paint();
+}
+function draw(){
+  const term=$('search').value.toLowerCase(), type=$('kind').value;
+  const matches=data.nodes.filter(n=>(!type||n.kind===type)&&
+     (n.label.toLowerCase().includes(term)||n.path.toLowerCase().includes(term)));
+  $('results').replaceChildren();
+  if(term) for(const n of matches.slice(0,50))button($('results'),n.label,()=>choose(n.id));
+  const links=focus?data.edges.filter(e=>e.source===focus||e.target===focus):[];
+  const neighbors=new Set(links.flatMap(e=>[e.source,e.target]));
+  const visible=matches.filter(n=>term||type|| (focus ? n.id===focus||neighbors.has(n.id) : ['Folder','File'].includes(n.kind)));
+  const ids=new Set(visible.map(n=>n.id));
+  const edges=(focus&&!term&&!type?links:data.edges).filter(e=>ids.has(e.source)&&ids.has(e.target));
+  $('hint').hidden=$('mode').value==='2D';
+  if($('mode').value==='3D') drawSpace(visible,edges);
+  else drawFlat(visible,edges,links);
+  const current=byId.get(focus);
+  $('heading').textContent=current?current.label:'Struktur workspace';
+  $('detail').textContent=current?current.path+(current.line?':'+current.line:''):'Pilih simpul untuk melihat tetangga dan relasinya.';
+  $('status').textContent=visible.length+' simpul · '+edges.length+' relasi';
+  $('relations').replaceChildren();
+  if(current)for(const edge of links)button($('relations'),byId.get(edge.source).name+' → '+edge.rel+' → '+byId.get(edge.target).name,()=>evidence(edge));
+}
+for(const k of [...new Set(data.nodes.map(n=>n.kind))].sort())$('kind').add(new Option(k,k));
+$('mode').onchange=draw;
+$('search').oninput=$('kind').onchange=()=>{focus=null;draw();};$('home').onclick=()=>choose(null);draw();
+</script></html>

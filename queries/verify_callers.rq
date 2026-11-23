@@ -1,0 +1,7 @@
+PREFIX kg: <urn:codekg:vocab:>
+SELECT ?caller ?path ?line WHERE {
+  ?target kg:qualified "auth.tokens.verify_token" ; kg:path ?definition .
+  ?site kg:caller ?caller ; kg:target ?target ; kg:path ?path ; kg:line ?line .
+  FILTER (?path != ?definition)
+}
+ORDER BY ?path ?line

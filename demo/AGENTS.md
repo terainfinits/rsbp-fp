@@ -1,0 +1,1 @@
+Untuk menavigasi kode, jalankan `codekg find <nama>` dari root demo. Pilih ID berdasarkan nama lengkap dan path. Gunakan `callers`, `callees`, atau `members` dengan ID tersebut. Buka baris sumber hasil kueri untuk verifikasi. Jika graf belum tersedia atau setelah kode berubah, jalankan `codekg build .`. Jika hasil kosong atau dinamis, periksa sumber dengan pencarian teks.
