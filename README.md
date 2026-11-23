@@ -1,8 +1,11 @@
 # Langkah Pakai
 
-Clone repo ini
+Clone repo ini dan buka
 ```
 git clone https://github.com/terainfinits/rsbp-fp
+```
+```
+cd rsbp-fp
 ```
 
 Buat virtual environment dan install
@@ -22,7 +25,10 @@ Buat variabel
 ```
 $kg = ".\.venv\Scripts\codekg.exe"
 ```
-Build
+Buildn misalnya game-2048
+```
+git clone https://github.com/yangshun/2048-python.git game-2048
+```
 ```
 & $kg build game-2048
 ```
