@@ -62,6 +62,28 @@ class Demo(unittest.TestCase):
         klass = self.invoke("find", "app.service.SessionStore")[0]
         self.assertEqual([n["name"] for n in self.invoke("members", klass["id"])], ["save"])
 
+    def test_constant_reads(self):
+        (self.root / "sizes.py").write_text("GRID_LEN = 4\ndef direct():\n    return GRID_LEN\n")
+        (self.root / "board.py").write_text(
+            "import sizes as c\nfrom sizes import GRID_LEN as ukuran\n"
+            "def width():\n    return c.GRID_LEN + ukuran\n"
+            "def shadow(ukuran):\n    return ukuran\n")
+        self.invoke("build", ".")
+        output = self.root / "codekg-out"
+        graph = Graph().parse(output / "graph.ttl")
+        constant, = graph.subjects(KG.qualified, Literal("sizes.GRID_LEN"))
+        readers = {str(graph.value(r, KG.qualified)) for r in graph.subjects(KG.reads, constant)}
+        self.assertEqual(readers, {"sizes.direct", "board.width"})
+        self.assertFalse(list(graph.subjects(KG.calls, constant)))
+        sites = sorted((str(graph.value(s, KG.path)), int(graph.value(s, KG.line)),
+                        int(graph.value(s, KG.column))) for s in graph.subjects(KG.target, constant)
+                       if (s, RDF.type, KG.ReadSite) in graph)
+        self.assertEqual(sites, [("board.py", 4, 11), ("board.py", 4, 24), ("sizes.py", 3, 11)])
+        html = (output / "graph.html").read_text(encoding="utf-8")
+        data = json.loads(re.search(r'<script id="graph-data"[^>]*>(.*?)</script>', html)[1])
+        edges = [e for e in data["edges"] if e["rel"] == "reads" and e["target"] == str(constant)]
+        self.assertEqual(sorted(len(e["evidence"]) for e in edges), [1, 2])
+
     def test_rebuild(self):
         self.invoke("build", ".")
         file = self.root / "auth/tokens.py"

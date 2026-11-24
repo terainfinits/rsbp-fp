@@ -4,7 +4,7 @@ from rdflib import Graph, Literal, Namespace, RDF, RDFS, URIRef
 
 KG = Namespace("urn:codekg:vocab:")
 KINDS = ("Folder", "File", "Class", "Function", "Method", "Constant")
-RELATIONS = ("contains", "declares", "imports", "inheritsFrom", "calls")
+RELATIONS = ("contains", "declares", "imports", "inheritsFrom", "calls", "reads")
 
 
 def identifier(kind, path, name=""):
@@ -17,9 +17,9 @@ def identifier(kind, path, name=""):
 def new_graph():
     graph = Graph()
     graph.bind("kg", KG)
-    for kind in (*KINDS, "CallSite"):
+    for kind in (*KINDS, "CallSite", "ReadSite"):
         graph.add((KG[kind], RDF.type, RDFS.Class))
-    for relation in (*RELATIONS, "caller", "target", "path", "name", "qualified",
+    for relation in (*RELATIONS, "caller", "reader", "target", "path", "name", "qualified",
                      "line", "endLine", "column", "expression", "status"):
         graph.add((KG[relation], RDF.type, RDF.Property))
     graph.add((KG.Method, RDFS.subClassOf, KG.Function))

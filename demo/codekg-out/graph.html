@@ -3,16 +3,19 @@
 <title>CodeKG · Graf workspace</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f5ef;color:#172823;font:15px "Segoe UI",sans-serif}header{padding:22px 4vw;background:#15382f;color:white;display:flex;align-items:baseline;gap:18px}h1{font-size:24px;margin:0}main{padding:24px 4vw}nav,.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}label{display:grid;gap:4px;font-size:13px}input,select,button{padding:8px 10px;border:1px solid #84978d;border-radius:5px;background:white;color:inherit;font:inherit}button{cursor:pointer}button:hover,button:focus{background:#d9f1db}.layout{margin-top:18px;display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:18px}#canvas,aside{border:1px solid #bdc8bd;background:#fff;border-radius:7px;padding:12px}#canvas{overflow:auto;max-height:70vh;background-color:#fdfdf8}aside{overflow-wrap:anywhere}h2{font-size:18px}#results button,#relations button{display:block;text-align:left;margin:5px 0;max-width:100%}#results{max-height:180px;overflow:auto}svg text{font:13px "Segoe UI",sans-serif;pointer-events:none}.node,.edge{cursor:pointer}.edge:hover path{stroke:#b45417;stroke-width:4}.node:focus rect,.node:hover rect{stroke-width:3}#status{color:#506058}@media(max-width:740px){.layout{grid-template-columns:1fr}}
+#kinds{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0;border:1px solid #84978d;border-radius:5px}
+#kinds legend{font-size:13px}#kinds label{display:flex;align-items:center;gap:4px;cursor:pointer}
 </style>
 <header><h1>CodeKG</h1><span>Graf workspace</span></header>
 <main><nav><label>Cari simbol atau path<input id="search" type="search" placeholder="verify_token"></label>
-<label>Tipe simpul<select id="kind"><option value="">Semua tipe</option></select></label>
+<fieldset id="kinds"><legend>Tipe simpul</legend></fieldset>
 <label>Tampilan<select id="mode"><option>3D</option><option>2D</option></select></label><button id="home">Struktur workspace</button></nav><p id="hint">Seret ruang kosong untuk memutar graf. Gunakan roda mouse untuk zoom.</p><div id="results"></div>
 <div class="layout"><section id="canvas" aria-label="Graf berarah"></section><aside><h2 id="heading">Struktur workspace</h2><p id="detail">Pilih simpul untuk melihat tetangga dan relasinya.</p><div id="relations"></div><p id="status"></p></aside></div></main>
-<script id="graph-data" type="application/json">{"nodes": [{"id": "urn:codekg:file:AGENTS.md", "kind": "File", "name": "AGENTS.md", "label": "AGENTS.md", "path": "AGENTS.md", "line": ""}, {"id": "urn:codekg:file:app/__init__.py", "kind": "File", "name": "__init__.py", "label": "app/__init__.py", "path": "app/__init__.py", "line": ""}, {"id": "urn:codekg:file:app/service.py", "kind": "File", "name": "service.py", "label": "app/service.py", "path": "app/service.py", "line": ""}, {"id": "urn:codekg:file:auth/__init__.py", "kind": "File", "name": "__init__.py", "label": "auth/__init__.py", "path": "auth/__init__.py", "line": ""}, {"id": "urn:codekg:file:auth/tokens.py", "kind": "File", "name": "tokens.py", "label": "auth/tokens.py", "path": "auth/tokens.py", "line": ""}, {"id": "urn:codekg:file:settings.json", "kind": "File", "name": "settings.json", "label": "settings.json", "path": "settings.json", "line": ""}, {"id": "urn:codekg:folder:.", "kind": "Folder", "name": "demo", "label": ".", "path": ".", "line": ""}, {"id": "urn:codekg:folder:app", "kind": "Folder", "name": "app", "label": "app", "path": "app", "line": ""}, {"id": "urn:codekg:folder:auth", "kind": "Folder", "name": "auth", "label": "auth", "path": "auth", "line": ""}, {"id": "urn:codekg:symbol:app/service.py:SessionStore", "kind": "Class", "name": "SessionStore", "label": "app.service.SessionStore", "path": "app/service.py", "line": "4"}, {"id": "urn:codekg:symbol:app/service.py:SessionStore.save", "kind": "Method", "name": "save", "label": "app.service.SessionStore.save", "path": "app/service.py", "line": "5"}, {"id": "urn:codekg:symbol:app/service.py:dispatch", "kind": "Function", "name": "dispatch", "label": "app.service.dispatch", "path": "app/service.py", "line": "15"}, {"id": "urn:codekg:symbol:app/service.py:login", "kind": "Function", "name": "login", "label": "app.service.login", "path": "app/service.py", "line": "9"}, {"id": "urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO", "kind": "Constant", "name": "TOKEN_DEMO", "label": "auth.tokens.TOKEN_DEMO", "path": "auth/tokens.py", "line": "1"}, {"id": "urn:codekg:symbol:auth/tokens.py:TokenStore", "kind": "Class", "name": "TokenStore", "label": "auth.tokens.TokenStore", "path": "auth/tokens.py", "line": "8"}, {"id": "urn:codekg:symbol:auth/tokens.py:TokenStore.save", "kind": "Method", "name": "save", "label": "auth.tokens.TokenStore.save", "path": "auth/tokens.py", "line": "9"}, {"id": "urn:codekg:symbol:auth/tokens.py:verify_token", "kind": "Function", "name": "verify_token", "label": "auth.tokens.verify_token", "path": "auth/tokens.py", "line": "4"}], "edges": [{"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:SessionStore", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:dispatch", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:login", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:file:auth/tokens.py", "rel": "imports", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "declares", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:file:AGENTS.md", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:file:settings.json", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:folder:app", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:folder:auth", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:app", "target": "urn:codekg:file:app/__init__.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:app", "target": "urn:codekg:file:app/service.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:auth", "target": "urn:codekg:file:auth/__init__.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:auth", "target": "urn:codekg:file:auth/tokens.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore", "target": "urn:codekg:symbol:app/service.py:SessionStore.save", "rel": "declares", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore", "rel": "inheritsFrom", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore.save", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "calls", "evidence": [{"path": "app/service.py", "line": 6, "column": 15}]}, {"source": "urn:codekg:symbol:app/service.py:login", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "calls", "evidence": [{"path": "app/service.py", "line": 10, "column": 7}, {"path": "app/service.py", "line": 12, "column": 11}]}, {"source": "urn:codekg:symbol:auth/tokens.py:TokenStore", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore.save", "rel": "declares", "evidence": []}]}</script><script>
+<script id="graph-data" type="application/json">{"nodes": [{"id": "urn:codekg:file:AGENTS.md", "kind": "File", "name": "AGENTS.md", "label": "AGENTS.md", "path": "AGENTS.md", "line": ""}, {"id": "urn:codekg:file:app/__init__.py", "kind": "File", "name": "__init__.py", "label": "app/__init__.py", "path": "app/__init__.py", "line": ""}, {"id": "urn:codekg:file:app/service.py", "kind": "File", "name": "service.py", "label": "app/service.py", "path": "app/service.py", "line": ""}, {"id": "urn:codekg:file:auth/__init__.py", "kind": "File", "name": "__init__.py", "label": "auth/__init__.py", "path": "auth/__init__.py", "line": ""}, {"id": "urn:codekg:file:auth/tokens.py", "kind": "File", "name": "tokens.py", "label": "auth/tokens.py", "path": "auth/tokens.py", "line": ""}, {"id": "urn:codekg:file:settings.json", "kind": "File", "name": "settings.json", "label": "settings.json", "path": "settings.json", "line": ""}, {"id": "urn:codekg:folder:.", "kind": "Folder", "name": "demo", "label": ".", "path": ".", "line": ""}, {"id": "urn:codekg:folder:app", "kind": "Folder", "name": "app", "label": "app", "path": "app", "line": ""}, {"id": "urn:codekg:folder:auth", "kind": "Folder", "name": "auth", "label": "auth", "path": "auth", "line": ""}, {"id": "urn:codekg:symbol:app/service.py:SessionStore", "kind": "Class", "name": "SessionStore", "label": "app.service.SessionStore", "path": "app/service.py", "line": "4"}, {"id": "urn:codekg:symbol:app/service.py:SessionStore.save", "kind": "Method", "name": "save", "label": "app.service.SessionStore.save", "path": "app/service.py", "line": "5"}, {"id": "urn:codekg:symbol:app/service.py:dispatch", "kind": "Function", "name": "dispatch", "label": "app.service.dispatch", "path": "app/service.py", "line": "15"}, {"id": "urn:codekg:symbol:app/service.py:login", "kind": "Function", "name": "login", "label": "app.service.login", "path": "app/service.py", "line": "9"}, {"id": "urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO", "kind": "Constant", "name": "TOKEN_DEMO", "label": "auth.tokens.TOKEN_DEMO", "path": "auth/tokens.py", "line": "1"}, {"id": "urn:codekg:symbol:auth/tokens.py:TokenStore", "kind": "Class", "name": "TokenStore", "label": "auth.tokens.TokenStore", "path": "auth/tokens.py", "line": "8"}, {"id": "urn:codekg:symbol:auth/tokens.py:TokenStore.save", "kind": "Method", "name": "save", "label": "auth.tokens.TokenStore.save", "path": "auth/tokens.py", "line": "9"}, {"id": "urn:codekg:symbol:auth/tokens.py:verify_token", "kind": "Function", "name": "verify_token", "label": "auth.tokens.verify_token", "path": "auth/tokens.py", "line": "4"}], "edges": [{"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:SessionStore", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:dispatch", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:symbol:app/service.py:login", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:app/service.py", "target": "urn:codekg:file:auth/tokens.py", "rel": "imports", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore", "rel": "declares", "evidence": []}, {"source": "urn:codekg:file:auth/tokens.py", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "declares", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:file:AGENTS.md", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:file:settings.json", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:folder:app", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:.", "target": "urn:codekg:folder:auth", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:app", "target": "urn:codekg:file:app/__init__.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:app", "target": "urn:codekg:file:app/service.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:auth", "target": "urn:codekg:file:auth/__init__.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:folder:auth", "target": "urn:codekg:file:auth/tokens.py", "rel": "contains", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore", "target": "urn:codekg:symbol:app/service.py:SessionStore.save", "rel": "declares", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore", "rel": "inheritsFrom", "evidence": []}, {"source": "urn:codekg:symbol:app/service.py:SessionStore.save", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "calls", "evidence": [{"path": "app/service.py", "line": 6, "column": 15}]}, {"source": "urn:codekg:symbol:app/service.py:login", "target": "urn:codekg:symbol:auth/tokens.py:verify_token", "rel": "calls", "evidence": [{"path": "app/service.py", "line": 10, "column": 7}, {"path": "app/service.py", "line": 12, "column": 11}]}, {"source": "urn:codekg:symbol:auth/tokens.py:TokenStore", "target": "urn:codekg:symbol:auth/tokens.py:TokenStore.save", "rel": "declares", "evidence": []}, {"source": "urn:codekg:symbol:auth/tokens.py:verify_token", "target": "urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO", "rel": "reads", "evidence": [{"path": "auth/tokens.py", "line": 5, "column": 20}]}]}</script><script>
 const $ = id => document.getElementById(id);
 const data = JSON.parse($('graph-data').textContent);
 const byId = new Map(data.nodes.map(n => [n.id,n]));
+const selectedKinds = new Set();
 let focus = null;
 function button(parent,label,action){
   const el=document.createElement('button');el.textContent=label;el.onclick=action;parent.append(el);
@@ -26,9 +29,10 @@ function evidence(edge){
   const a=byId.get(edge.source), b=byId.get(edge.target);
   $('heading').textContent=edge.rel;
   $('detail').textContent=a.label+' → '+b.label;
-  $('status').textContent=edge.evidence.length ? 'Lokasi panggilan: '+edge.evidence.map(s=>s.path+':'+s.line+' (kolom '+(s.column+1)+')').join(', ') : 'Lokasi entitas: '+a.path+(a.line?':'+a.line:'')+' → '+b.path+(b.line?':'+b.line:'');
+  const label=edge.rel==='reads'?'Lokasi pembacaan: ':'Lokasi panggilan: ';
+  $('status').textContent=edge.evidence.length ? label+edge.evidence.map(s=>s.path+':'+s.line+' (kolom '+(s.column+1)+')').join(', ') : 'Lokasi entitas: '+a.path+(a.line?':'+a.line:'')+' → '+b.path+(b.line?':'+b.line:'');
 }
-function choose(id){focus=id;$('search').value='';$('kind').value='';draw();}
+function choose(id){focus=id;$('search').value='';draw();}
 function drawFlat(visible,edges,links){
   const columns=new Map(), positions=new Map();
   for(const n of visible){
@@ -133,27 +137,46 @@ function drawSpace(nodes,edges){
   paint();
 }
 function draw(){
-  const term=$('search').value.toLowerCase(), type=$('kind').value;
-  const matches=data.nodes.filter(n=>(!type||n.kind===type)&&
+  const term=$('search').value.toLowerCase();
+  const matches=data.nodes.filter(n=>(!selectedKinds.size||selectedKinds.has(n.kind))&&
      (n.label.toLowerCase().includes(term)||n.path.toLowerCase().includes(term)));
   $('results').replaceChildren();
   if(term) for(const n of matches.slice(0,50))button($('results'),n.label,()=>choose(n.id));
   const links=focus?data.edges.filter(e=>e.source===focus||e.target===focus):[];
   const neighbors=new Set(links.flatMap(e=>[e.source,e.target]));
-  const visible=matches.filter(n=>term||type|| (focus ? n.id===focus||neighbors.has(n.id) : ['Folder','File'].includes(n.kind)));
+  const visible=matches.filter(n=>focus ? n.id===focus||neighbors.has(n.id)
+    : term||selectedKinds.size||['Folder','File'].includes(n.kind));
   const ids=new Set(visible.map(n=>n.id));
-  const edges=(focus&&!term&&!type?links:data.edges).filter(e=>ids.has(e.source)&&ids.has(e.target));
+  const edges=(focus?links:data.edges).filter(e=>ids.has(e.source)&&ids.has(e.target));
   $('hint').hidden=$('mode').value==='2D';
   if($('mode').value==='3D') drawSpace(visible,edges);
   else drawFlat(visible,edges,links);
   const current=byId.get(focus);
-  $('heading').textContent=current?current.label:'Struktur workspace';
+  $('heading').textContent=current?current.label:(term||selectedKinds.size?'Hasil filter':'Struktur workspace');
   $('detail').textContent=current?current.path+(current.line?':'+current.line:''):'Pilih simpul untuk melihat tetangga dan relasinya.';
   $('status').textContent=visible.length+' simpul · '+edges.length+' relasi';
   $('relations').replaceChildren();
-  if(current)for(const edge of links)button($('relations'),byId.get(edge.source).name+' → '+edge.rel+' → '+byId.get(edge.target).name,()=>evidence(edge));
+  if(current)for(const edge of edges)button($('relations'),byId.get(edge.source).name+' → '+edge.rel+' → '+byId.get(edge.target).name,()=>evidence(edge));
 }
-for(const k of [...new Set(data.nodes.map(n=>n.kind))].sort())$('kind').add(new Option(k,k));
+for(const kind of [...new Set(data.nodes.map(n=>n.kind))].sort()){
+  const label=document.createElement('label');
+  const box=document.createElement('input');
+  box.type='checkbox';
+  box.onchange=()=>{
+    if(box.checked)selectedKinds.add(kind);
+    else selectedKinds.delete(kind);
+    if(focus&&selectedKinds.size&&!selectedKinds.has(byId.get(focus).kind))focus=null;
+    draw();
+  };
+  label.append(box,kind);
+  $('kinds').append(label);
+}
 $('mode').onchange=draw;
-$('search').oninput=$('kind').onchange=()=>{focus=null;draw();};$('home').onclick=()=>choose(null);draw();
+$('search').oninput=()=>{focus=null;draw();};
+$('home').onclick=()=>{
+  selectedKinds.clear();
+  for(const box of $('kinds').querySelectorAll('input'))box.checked=false;
+  choose(null);
+};
+draw();
 </script></html>

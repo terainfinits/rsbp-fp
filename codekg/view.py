@@ -16,17 +16,18 @@ def render(graph):
                               path=str(graph.value(key, KG.path)),
                               line=str(graph.value(key, KG.line) or "")))
     sites = defaultdict(list)
-    for site in graph.subjects(RDF.type, KG.CallSite):
-        target = graph.value(site, KG.target)
-        if target:
-            pair = (graph.value(site, KG.caller), target)
-            sites[pair].append(dict(path=str(graph.value(site, KG.path)),
-                                    line=int(graph.value(site, KG.line)),
-                                    column=int(graph.value(site, KG.column))))
+    for kind, actor, relation in [(KG.CallSite, KG.caller, "calls"), (KG.ReadSite, KG.reader, "reads")]:
+        for site in graph.subjects(RDF.type, kind):
+            target = graph.value(site, KG.target)
+            if target:
+                source = graph.value(site, actor)
+                sites[relation, source, target].append(dict(
+                    path=str(graph.value(site, KG.path)), line=int(graph.value(site, KG.line)),
+                    column=int(graph.value(site, KG.column))))
     edges = []
     for rel in RELATIONS:
         for source, target in graph.subject_objects(KG[rel]):
-            evidence = sites[source, target] if rel == "calls" else []
+            evidence = sites.get((rel, source, target), [])
             edges.append(dict(source=str(source), target=str(target), rel=rel,
                               evidence=sorted(evidence, key=lambda row: (row["line"], row["column"]))))
     data = dict(nodes=sorted(nodes, key=lambda row: row["id"]),

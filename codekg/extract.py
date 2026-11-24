@@ -62,6 +62,7 @@ class Collector(ast.NodeVisitor):
         self.scope = scope
         self.package = package
         self.calls = []
+        self.reads = []
         self.bases = []
         self.imports = []
         self.count = 0
@@ -164,8 +165,15 @@ class Collector(ast.NodeVisitor):
         self.calls.append((self.scope, node, False))
         self.generic_visit(node)
 
+    def visit_Attribute(self, node):
+        if isinstance(node.ctx, ast.Load):
+            self.reads.append((self.scope, node))
+        self.visit(node.value)
+
     def visit_Name(self, node):
-        if isinstance(node.ctx, (ast.Store, ast.Del)):
+        if isinstance(node.ctx, ast.Load):
+            self.reads.append((self.scope, node))
+        elif isinstance(node.ctx, (ast.Store, ast.Del)):
             self.bind(node.id)
 
     def assignment(self, node, targets):
@@ -331,6 +339,17 @@ def extract(root):
             superclass = resolver.expression(scope, base)
             if superclass and superclass.kind == "Class":
                 graph.add((subclass.key, KG.inheritsFrom, superclass.key))
+        for scope, node in collector.reads:
+            target = resolver.expression(scope, node)
+            if target and target.kind == "Constant":
+                site = identifier("read", scope.path, f"{node.lineno}.{node.col_offset}-{node.end_lineno}.{node.end_col_offset}")
+                graph.add((scope.key, KG.reads, target.key))
+                graph.add((site, RDF.type, KG.ReadSite))
+                graph.add((site, KG.reader, scope.key))
+                graph.add((site, KG.target, target.key))
+                graph.add((site, KG.path, Literal(scope.path)))
+                graph.add((site, KG.line, Literal(node.lineno)))
+                graph.add((site, KG.column, Literal(node.col_offset)))
         for scope, node, uncertain in collector.calls:
             target = None if uncertain else resolver.expression(scope, node.func)
             site = identifier("site", scope.path, f"{node.lineno}.{node.col_offset}-{node.end_lineno}.{node.end_col_offset}")

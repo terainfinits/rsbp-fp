@@ -18,6 +18,8 @@ kg:Function a rdfs:Class .
 kg:Method a rdfs:Class ;
     rdfs:subClassOf kg:Function .
 
+kg:ReadSite a rdfs:Class .
+
 <urn:codekg:folder:.> a kg:Folder ;
     kg:contains <urn:codekg:file:AGENTS.md>,
         <urn:codekg:file:settings.json>,
@@ -26,6 +28,13 @@ kg:Method a rdfs:Class ;
     kg:name "demo" ;
     kg:path "." ;
     kg:qualified "." .
+
+<urn:codekg:read:auth/tokens.py:5.20-5.30> a kg:ReadSite ;
+    kg:column 20 ;
+    kg:line 5 ;
+    kg:path "auth/tokens.py" ;
+    kg:reader <urn:codekg:symbol:auth/tokens.py:verify_token> ;
+    kg:target <urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO> .
 
 <urn:codekg:site:app/service.py:10.7-10.19> a kg:CallSite ;
     kg:caller <urn:codekg:symbol:app/service.py:login> ;
@@ -88,6 +97,10 @@ kg:path a rdf:Property .
 
 kg:qualified a rdf:Property .
 
+kg:reader a rdf:Property .
+
+kg:reads a rdf:Property .
+
 kg:status a rdf:Property .
 
 kg:target a rdf:Property .
@@ -144,13 +157,6 @@ kg:target a rdf:Property .
     kg:path "app/service.py" ;
     kg:qualified "app.service.SessionStore" .
 
-<urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO> a kg:Constant ;
-    kg:endLine 1 ;
-    kg:line 1 ;
-    kg:name "TOKEN_DEMO" ;
-    kg:path "auth/tokens.py" ;
-    kg:qualified "auth.tokens.TOKEN_DEMO" .
-
 <urn:codekg:symbol:auth/tokens.py:TokenStore.save> a kg:Method ;
     kg:endLine 10 ;
     kg:line 9 ;
@@ -197,10 +203,18 @@ kg:target a rdf:Property .
     kg:path "app/service.py" ;
     kg:qualified "app.service.login" .
 
+<urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO> a kg:Constant ;
+    kg:endLine 1 ;
+    kg:line 1 ;
+    kg:name "TOKEN_DEMO" ;
+    kg:path "auth/tokens.py" ;
+    kg:qualified "auth.tokens.TOKEN_DEMO" .
+
 <urn:codekg:symbol:auth/tokens.py:verify_token> a kg:Function ;
     kg:endLine 5 ;
     kg:line 4 ;
     kg:name "verify_token" ;
     kg:path "auth/tokens.py" ;
-    kg:qualified "auth.tokens.verify_token" .
+    kg:qualified "auth.tokens.verify_token" ;
+    kg:reads <urn:codekg:symbol:auth/tokens.py:TOKEN_DEMO> .
 
